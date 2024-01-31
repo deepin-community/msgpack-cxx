@@ -1,5 +1,320 @@
-template-repository (1.0-1) unstable; urgency=medium
+msgpack-cxx (4.1.3-1) unstable; urgency=medium
 
-  * Initial release
+  * New upstream release
+  * debian/watch:
+    - Use GitHub's tags page to find the release tarball
+    - Bump watchfile version to 4
+  * Add debian/upstream/metadata file
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- James McCoy <jamessan@debian.org>  Tue, 20 Dec 2022 15:42:24 -0500
+
+msgpack-cxx (4.1.1-4) unstable; urgency=medium
+
+  * autopkgtests: Depend on libmsgpack-cxx-dev, not libmsgpack-dev
+  * autopkgtests: Use verbose build output to see the cmdline
+
+ -- James McCoy <jamessan@debian.org>  Fri, 29 Jul 2022 06:39:53 -0400
+
+msgpack-cxx (4.1.1-3) unstable; urgency=medium
+
+  * Update Vcs-* URLs to debian namespace
+  * Allow stderr in autopkgtest output
+
+ -- James McCoy <jamessan@debian.org>  Tue, 26 Jul 2022 06:52:59 -0400
+
+msgpack-cxx (4.1.1-2) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- James McCoy <jamessan@debian.org>  Mon, 25 Jul 2022 19:55:43 -0400
+
+msgpack-cxx (4.1.1-1) experimental; urgency=medium
+
+  * New upstream release
+    + Remove backported patches
+  * Split C++ support into its own package, following upstream's split of the
+    project.  (Closes: #1005206)
+  * Breaks/Replaces libmsgpack-dev pre-4.0.0
+  * Declare compliance with Policy 4.6.1, no changes needed
+
+ -- James McCoy <jamessan@debian.org>  Fri, 15 Jul 2022 06:37:54 -0400
+
+msgpack-c (3.3.0-4) unstable; urgency=medium
+
+  * Add libboost-dev to libmsgpack-dev Depends (Ref #965301)
+
+ -- James McCoy <jamessan@debian.org>  Sun, 19 Jul 2020 21:30:56 -0400
+
+msgpack-c (3.3.0-3) unstable; urgency=medium
+
+  * Revert "Enable MSGPACK_BOOST and add
+    libboost-{chrono,context,system,timer}-dev Build-Depends".
+    + libboost-context-dev isn't available on all architectures.  The next
+      upstream version will refine the required Boost libaries.  Until then,
+      go back to not running the Boost tests.
+  * Only Build-Depend on libboost-dev for tests
+
+ -- James McCoy <jamessan@debian.org>  Wed, 15 Jul 2020 10:18:06 -0400
+
+msgpack-c (3.3.0-2) unstable; urgency=medium
+
+  * Remove build17/ during cleanup
+  * Backport upstream patches to fix FTBFS on armhf.  (Closes: #965010)
+  * Enable MSGPACK_BOOST and add libboost-{chrono,context,system,timer}-dev
+    Build-Depends.
+
+ -- James McCoy <jamessan@debian.org>  Wed, 15 Jul 2020 01:41:36 -0400
+
+msgpack-c (3.3.0-1) unstable; urgency=medium
+
+  * New upstream release
+    + Fix FTBFS on 32-bit architectures (Closes: #950496)
+  * copyright: Remove unused Files/License paragraphs
+  * Declare compliance with Policy 4.5.0, no changes needed
+  * tests/control:
+    + Add libcjson-dev to Depends for new json example
+
+ -- James McCoy <jamessan@debian.org>  Fri, 05 Jun 2020 23:40:36 -0400
+
+msgpack-c (3.2.1-1) experimental; urgency=medium
+
+  * New upstream release (Closes: #919672)
+  * rules:
+    + Remove obsolete handling of differing hardening=+all,-pie semantics
+    + Run build-time tests for C++11 and C++17
+  * Switch to debhelper compat 12 via debhelper-compat
+  * control:
+    + Add graphviz to Build-Depends-Indep to build graphs in API docs
+    + Mark libmsgpack-doc Multi-Arch: foreign
+    + Mark libmsgpack-dev Multi-Arch: same
+  * Use jdupes to reduce size of libmsgpack-doc
+  * Declare compliance with Policy 4.4.1, no changes needed
+  * autopkgtests:
+    + Depend on libmsgpack-dev, not "@".  Installing libmsgpack-doc just
+      wastes time/disk space.
+    + Use example directory's CMakeLists.txt to build/test all examples
+  * Avoid building/installing documentation for nodoc build profile/options
+    + Add <!nodoc> to Build-Depends-Indep
+    + Add <!nodoc> Build-Profiles to libmsgpack-doc stanza
+    + Don't build libmsgpack-doc if DEB_BUILD_OPTIONS=nodoc
+
+ -- James McCoy <jamessan@debian.org>  Wed, 01 Jan 2020 23:10:23 -0500
+
+msgpack-c (3.0.1-3) unstable; urgency=medium
+
+  * Use -DBUILD_GTEST=ON to be compatible with googletest < 1.8.1, which
+    relied on gmock implicitly builing gtest
+
+ -- James McCoy <jamessan@debian.org>  Sun, 28 Oct 2018 01:25:17 -0400
+
+msgpack-c (3.0.1-2) unstable; urgency=medium
+
+  * rules:
+    + Do not fail build if build-gtest/ exists
+    + Use -DBUILD_GMOCK=OFF to avoid building gmock, rather than trying to
+      only build the googletest sub-directory (Closes: #912061)
+    + Ensure dh_doxygen is called after dh_installdocs
+  * Opt-in to debhelper 12 beta
+  * Declare compliance with Policy 4.2.1, no changes needed
+  * Add Build-Depends-Package to libmsgpackc2.symbols
+
+ -- James McCoy <jamessan@debian.org>  Sat, 27 Oct 2018 23:57:16 -0400
+
+msgpack-c (3.0.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Use cmake+ninja dh buildsystem
+  * rules: Build googletest so tests can run
+
+ -- James McCoy <jamessan@debian.org>  Sat, 12 May 2018 07:34:55 -0400
+
+msgpack-c (3.0.0-1) unstable; urgency=medium
+
+  * New upstream release
+    + Fixes FTBFS with gcc8 (Closes: #897815)
+    + New v3 C++ API
+  * copyright: Bump years for debian/* and *
+  * Declare compliance with Policy 4.1.4, no changes needed
+  * control: Differentiate libmsgpack-dev short description from libmsgpackc2
+  * Build/run some of upstream's examples as basic autopkgtests
+
+ -- James McCoy <jamessan@debian.org>  Thu, 10 May 2018 23:08:20 -0400
+
+msgpack-c (2.1.5-2) unstable; urgency=medium
+
+  * control:
+    + Change Vcs-* to salsa.debian.org
+    + Declare compliance with Policy 4.1.3
+    + Set myself as maintainer.  Thanks to Taku YASUI for all his work on the
+      package
+    + Set Rules-Requires-Root to no
+  * Bump debhelper compat to 11
+  * Install doxygen docs using dh_installdocs
+  * rules: Remove -pie from hardening build options for dpkg >= 1.18.23
+  * Stop installing duplicate copy of upstream README
+  * Register API documentation with doc-base
+
+ -- James McCoy <jamessan@debian.org>  Wed, 28 Mar 2018 21:07:03 -0400
+
+msgpack-c (2.1.5-1) unstable; urgency=medium
+
+  * New upstream release
+  * Upload to unstable
+  * Declare compliance with Policy 4.1.0
+    + Change Priority from extra to optional
+
+ -- James McCoy <jamessan@debian.org>  Sun, 17 Sep 2017 08:53:26 -0400
+
+msgpack-c (2.1.3-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix FTBFS with gcc-7 (Closes: #853564)
+    + Bump minimum CMake version to 2.8.12
+    + Provide CMake config files to assist building against msgpack-c.
+
+ -- James McCoy <jamessan@debian.org>  Sun, 18 Jun 2017 22:15:47 -0400
+
+msgpack-c (2.1.1-1) experimental; urgency=medium
+
+  * New upstream release (Closes: #845066)
+    + Incompatible changes in v2 API
+      - Removed pointer versions of msgpack::unpack APIs.
+      - Removed pointer versions of msgpack::convert APIs.
+      - Removed msgpack::type::nil in favor of msgpack::type::nil_t.
+      - Removed std::string specialization for msgpack::object conversion.
+    + New FLOAT32/FLOAT64 object types, the latter of which is the same as the
+      existing FLOAT type.
+      - This also introduces explicit (un)pack functions that handle C's float
+        instead of coercing them to double.
+  * debian/rules: Rework to use CMake instead of autotools
+  * Update symbols for new APIs/object types
+  * Declare compliance with policy 3.9.8, no changes needed
+
+ -- James McCoy <jamessan@debian.org>  Thu, 01 Jun 2017 23:59:45 -0400
+
+msgpack-c (1.4.2-5) unstable; urgency=medium
+
+  * Backport upstream patches to fix FTBFS with GCC-7. (Closes: #871140)
+
+ -- James McCoy <jamessan@debian.org>  Mon, 21 Aug 2017 07:00:24 -0400
+
+msgpack-c (1.4.2-4) unstable; urgency=medium
+
+  * Apply another upstream patch to fix FTBFS on sparc64.
+
+ -- James McCoy <jamessan@debian.org>  Sat, 17 Sep 2016 13:53:14 -0400
+
+msgpack-c (1.4.2-3) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- James McCoy <jamessan@debian.org>  Fri, 02 Sep 2016 21:52:39 -0400
+
+msgpack-c (1.4.2-2) experimental; urgency=medium
+
+  * Apply upstream patch to fix FTBFS on sparc64.
+
+ -- James McCoy <jamessan@debian.org>  Thu, 21 Jul 2016 23:00:26 -0400
+
+msgpack-c (1.4.2-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix FTBFS with gcc6
+
+ -- James McCoy <jamessan@debian.org>  Tue, 28 Jun 2016 21:51:41 -0400
+
+msgpack-c (1.4.0-2) experimental; urgency=medium
+
+  * Bump minimum symbols version of APIs which deal with the object types.
+    (Closes: #814096)
+
+ -- James McCoy <jamessan@debian.org>  Sun, 14 Feb 2016 15:07:31 -0500
+
+msgpack-c (1.4.0-1) experimental; urgency=medium
+
+  * New upstream release
+    + libmsgpack.so no longer exists, since the C++ code is header-only.
+      libmsgpackc.so is the C library.
+  * Remove libmsgpack4 package.
+  * Build and include documentation in libmsgpack-doc
+
+ -- James McCoy <jamessan@debian.org>  Sat, 23 Jan 2016 02:12:45 -0500
+
+msgpack-c (1.3.0-3) experimental; urgency=medium
+
+  * Cherry-pick upstream patch to fix FTBFS on big-endian architectures.
+
+ -- James McCoy <jamessan@debian.org>  Fri, 15 Jan 2016 20:56:59 -0500
+
+msgpack-c (1.3.0-2) experimental; urgency=medium
+
+  * Cherry-pick upstream patch to fix FTBFS when “char” is unsigned.
+  * Enable all hardening build flags.
+
+ -- James McCoy <jamessan@debian.org>  Wed, 13 Jan 2016 20:03:40 -0500
+
+msgpack-c (1.3.0-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix FTBFS on ARM (Closes: #749079)
+    + License change from Apache 2.0 to Boost Software License 1.0
+    + Support for msgpack v5 format
+    + C++11 support
+    + Rewritten README with current links to msgpack information.  (Closes:
+      #703657)
+  * Point watch file to GitHub releases.
+  * Bump debhelper compat to 9
+  * Switch from cdbs to dh
+    + Use autotools-dev addon to update config.{sub,guess}.  (Closes: #734569)
+  * Add libgtest-dev and zlib1g-dev to Build-Depends, so the test suite can be
+    run.
+  * Enable C++11 support
+  * Mark libmsgpack4 and libmsgpackc2 as Multi-Arch: same
+  * Declare compliance with policy 3.9.6
+  * Include msgpack.pc in libmsgpack-dev
+
+ -- James McCoy <jamessan@debian.org>  Sun, 10 Jan 2016 22:45:48 -0500
+
+msgpack (0.5.7-3) unstable; urgency=low
+
+  * Migration from Subversion to Git
+  * Bump Standards-Version to 3.9.4.
+
+ -- Taku YASUI <tach@debian.org>  Fri, 16 Aug 2013 18:13:02 +0900
+
+msgpack (0.5.7-2) unstable; urgency=low
+
+  * Fix big-endian problem
+    - Add patch 20_fix_bigendian
+      https://github.com/msgpack/msgpack/commit/b8aa93ce30d11d091b339bff0e10ddf3a8d08daf
+
+ -- Taku YASUI <tach@debian.org>  Mon, 16 Apr 2012 03:23:53 +0900
+
+msgpack (0.5.7-1) unstable; urgency=low
+
+  * New upstream release
+  * Remove needless README.source
+  * Move repository to svn.debian.org
+    - Vcs-Svn: svn://svn.debian.org/svn/collab-maint/deb-maint/msgpack
+  * Bump Standards-Version to 3.9.3
+
+ -- Taku YASUI <tach@debian.org>  Sat, 31 Mar 2012 05:53:02 +0900
+
+msgpack (0.5.4-2) unstable; urgency=low
+
+  * Remove *.la file from libmsgpack-dev (closes: #622438)
+  * Change Standard-Version to 3.9.2
+
+ -- Taku YASUI <tach@debian.org>  Sat, 18 Jun 2011 12:31:24 +0900
+
+msgpack (0.5.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Taku YASUI <tach@debian.org>  Fri, 10 Sep 2010 23:49:13 +0900
+
+msgpack (0.5.1-1) unstable; urgency=low
+
+  * Initial release (closes: #588387)
+
+ -- Taku YASUI <tach@debian.org>  Mon, 12 Jul 2010 02:27:55 +0900

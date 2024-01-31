@@ -1,0 +1,58 @@
+#!/bin/sh
+set -e
+
+SRCDIR=$(pwd)
+
+LANG_TYPE=
+API_VER=1
+
+while getopts l:a: arg; do
+  case $arg in
+    l)
+      LANG_TYPE=$OPTARG
+      [ -d "$SRCDIR/example/$LANG_TYPE" ] || { >&2 printf 'Invalid example type - "%s"\n' "$LANG_TYPE"; exit 1; }
+      ;;
+    a)
+      API_VER=$OPTARG
+      expr "$API_VER" : '[0-9]\+$' >/dev/null 2>/dev/null || { >&2 printf 'API value (%s) must be numeric\n' "$API_VER"; exit 1; }
+      ;;
+    \?)
+      printf 'Usage: %s -l <LANG> [-a <API_VER>]\n'
+      exit 0
+      ;;
+  esac
+done
+
+[ -n "$LANG_TYPE" ] || (>&2 printf 'Must specify -l <LANG>\n'; exit 1)
+
+cd "$AUTOPKGTEST_TMP"
+
+[ -d example ] || cp -r "$SRCDIR"/example .
+
+cat > CMakeLists.txt <<EOF
+cmake_minimum_required(VERSION 3.0)
+project(msgpack_autopkgtests)
+find_package(msgpack REQUIRED CONFIG)
+find_package(Threads)
+add_subdirectory(example/$LANG_TYPE)
+EOF
+
+CXXFLAGS="$CXXFLAGS -DMSGPACK_DEFAULT_API_VERSION=$API_VER"
+CMAKE_ARGS=
+[ "$LANG_TYPE" = x3 ] && CMAKE_ARGS="$CMAKE_ARGS -DMSGPACK_USE_X3_PARSE=ON"
+[ "$LANG_TYPE" = cpp11 ] && CMAKE_ARGS="$CMAKE_ARGS -DMSGPACK_CXX11=ON"
+
+export CFLAGS
+export CXXFLAGS
+
+DIR="$AUTOPKGTEST_TMP/${LANG_TYPE}v${API_VER}"
+mkdir -p "$DIR"
+trap "rm -r '$DIR'" EXIT
+cd "$DIR"
+
+cmake -Wno-dev $CMAKE_ARGS ..
+cmake --build . --verbose
+for example_bin in $(find example/$LANG_TYPE -type f -perm /a+x); do
+  echo "Testing $LANG_TYPE example '$(basename "$example_bin")'"
+  ./"$example_bin"
+done

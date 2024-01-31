@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+./debian/tests/run_examples -l cpp11 -a 1
+./debian/tests/run_examples -l cpp11 -a 2
+./debian/tests/run_examples -l cpp11 -a 3

@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+env CXXFLAGS="-DMSGPACK_USE_CPP03" ./debian/tests/run_examples -l cpp03 -a 1
+env CXXFLAGS="-DMSGPACK_USE_CPP03" ./debian/tests/run_examples -l cpp03 -a 2
+env CXXFLAGS="-DMSGPACK_USE_CPP03" ./debian/tests/run_examples -l cpp03 -a 3
