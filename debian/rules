@@ -1,4 +1,54 @@
 #!/usr/bin/make -f
 
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/buildflags.mk
+
+export CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+
 %:
-	dh $@
+	dh $@ --buildsystem=cmake+ninja --builddirectory=build$(DEFAULT_CPPVER)
+
+CPPVERS = CXX11 CXX14 CXX17 CXX20
+export DEFAULT_CPPVER = CXX11
+
+# If we're running tests, then setup the build for all the supported C++
+# standards so we can run the entire test suite
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+override_dh_auto_configure:
+	for ver in $(CPPVERS); do \
+	  dh_auto_configure --buildsystem=cmake+ninja --builddirectory=build$${ver} -- -DMSGPACK_$${ver}=ON -DMSGPACK_BUILD_TESTS=ON; \
+	done
+
+override_dh_auto_build-arch:
+	for ver in $(CPPVERS); do \
+	  dh_auto_build --builddirectory=build$${ver}; \
+	done
+
+override_dh_auto_test-arch:
+	for ver in $(CPPVERS); do \
+	  dh_auto_test --builddirectory=build$${ver}; \
+	done
+else
+override_dh_auto_configure:
+	dh_auto_configure --builddirectory=build$(DEFAULT_CPPVER) -- -DMSGPACK_$(DEFAULT_CPPVER)=ON
+endif
+
+ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
+override_dh_auto_build-indep:
+	dh_auto_build -- doxygen
+
+override_dh_install-indep:
+	dh_install -i
+
+override_dh_installdocs-indep:
+	mkdir -p build/html
+	dh_installdocs
+	dh_doxygen
+
+override_dh_link-indep:
+	dh_link -i
+	jdupes -rl debian/libmsgpack-cxx-doc/usr/
+
+override_dh_auto_test-indep:
+endif

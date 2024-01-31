@@ -1,0 +1,22 @@
+Tests: cpp03
+# The stream example writes "connection closed" to stderr as part of the normal
+# EOF processing
+Restrictions: allow-stderr
+Depends:
+ build-essential,
+ cmake,
+ libmsgpack-cxx-dev,
+
+Tests: cpp11
+Restrictions: allow-stderr
+Depends:
+ build-essential,
+ cmake,
+ libmsgpack-cxx-dev,
+
+Tests: x3
+Restrictions: allow-stderr
+Depends:
+ build-essential,
+ cmake,
+ libmsgpack-cxx-dev,

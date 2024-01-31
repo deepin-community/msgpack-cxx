@@ -1,0 +1,4 @@
+#!/bin/sh
+
+env CXXFLAGS="-DMSGPACK_USE_X3_PARSE" ./debian/tests/run_examples -l x3 -a 2
+env CXXFLAGS="-DMSGPACK_USE_X3_PARSE" ./debian/tests/run_examples -l x3 -a 3
